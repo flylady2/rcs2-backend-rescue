@@ -164,7 +164,7 @@ DEPENDENCIES
   pg (>= 0.18, < 2.0)
   puma (~> 4.3)
   rack-cors
-  rails (~> 6.0.3, >= 6.0.3.4)
+  rails (~> 6.0.3.1, >= 6.0.3.4)
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data
