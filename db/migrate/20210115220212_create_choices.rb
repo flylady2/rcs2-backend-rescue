@@ -3,7 +3,7 @@ class CreateChoices < ActiveRecord::Migration[6.0]
     create_table :choices do |t|
       t.string :content
       t.float :score
-      t.belongs_to :survey, null: false, foreign_key: true
+      t.belongs_to :survey, foreign_key: true
 
       t.timestamps
     end
