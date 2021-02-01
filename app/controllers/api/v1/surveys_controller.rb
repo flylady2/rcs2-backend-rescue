@@ -10,11 +10,25 @@ class Api::V1::SurveysController < ApplicationController
 
   def create
     @survey = Survey.new(survey_params)
+    if @survey.save
+
+      @choices = @survey.choices.build([{content: params["choiceAContent"], score: params["choiceAInitialScore"]}, {content: params["choiceBContent"], score: params["choiceBInitialScore"]}])
+      #byebug
+      @choices.each {|choice|
+        choice.save}
+      #byebug
+      options = {
+        include: [:choices]
+      }
+      render json: SurveySerializer.new(@survey, options), status: :accepted
+    else
+      render json: { errors: @survey.errors.full_messages}, status: :unprocessable_entity
+    end
   end
 
   private
     def survey_params
-      params.require(:survey).permit(:name, choices_attributes: [:content, :score, :survey_id])
+      params.require(:survey).permit(:name, :user_id, choices_attributes: [:content, :score, :survey_id])
     end
 
 end
