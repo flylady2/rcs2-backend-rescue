@@ -7,6 +7,8 @@ class Survey < ApplicationRecord
   #not sure about this one:
   has_many :rankings, through: :choices
 
-  validates :name, uniqueness: { case_sensitive: false}
+  accepts_nested_attributes_for :choices
+
+  #validates :name, uniqueness: { case_sensitive: false}
 
 end
