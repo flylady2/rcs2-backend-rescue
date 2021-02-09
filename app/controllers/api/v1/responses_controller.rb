@@ -1,5 +1,13 @@
 class Api::V1::ResponsesController < ApplicationController
 
+  def index
+    @responses = Response.all
+    options = {
+      include: [:choices, :rankings]
+    }
+    render json: { responses: ResponseSerializer.new(@responses, options)}
+  end
+
   def create
     if params[:survey_id] && @survey = Survey.find_by_id(params[:survey_id].to_i)#nested uner responses
       @response = @survey.responses.new(response_params)
@@ -12,6 +20,7 @@ class Api::V1::ResponsesController < ApplicationController
 
       @rankings.each {|ranking|
         ranking.save}
+      @response.response_count  
       #byebug
       options = {
         include: [:rankings]
@@ -22,6 +31,7 @@ class Api::V1::ResponsesController < ApplicationController
     else
       render json: { errors: @response.errors.full_messages}, status: :unprocessable_entity
     end
+
 
 
   end
