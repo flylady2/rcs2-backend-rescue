@@ -5,8 +5,11 @@ Rails.application.routes.draw do
       resources :users, only: [:index, :new, :create, :show]
       resources :surveys, only: [:index, :new, :create, :show, :destroy] do
         resources :choices, only: [:new, :create]
+        resources :responses, only: [:index, :new, :create, :show] do
+          resources :rankings, only: [:new, :create]
+        end
       end
-      resources :responses, only: [:new, :create, :destroy] do
+      resources :responses, only: [:index, :new, :create, :destroy] do
         resources :rankings, only: [:new, :create]
       end
       resources :rankings, only: [:update]

@@ -12,7 +12,7 @@ class Api::V1::SurveysController < ApplicationController
     @survey = Survey.new(survey_params)
     if @survey.save
 
-      @choices = @survey.choices.build([{content: params["choiceAContent"], score: params["choiceAInitialScore"]}, {content: params["choiceBContent"], score: params["choiceBInitialScore"]}])
+      @choices = @survey.choices.build([{content: params["choiceAContent"], score: params["choiceAInitialScore"]}, {content: params["choiceBContent"], score: params["choiceBInitialScore"]}, {content: params["choiceCContent"], score: params["choiceCInitialScore"]}, {content: params["choiceDContent"], score: params["choiceDInitialScore"]}])
       #byebug
       @choices.each {|choice|
         choice.save}
