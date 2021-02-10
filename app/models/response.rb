@@ -10,7 +10,7 @@ class Response < ApplicationRecord
   def response_count
     @survey = self.survey
     number_of_responses = @survey.responses.count
-    byebug
+    #byebug
   end
 
   def calculate_winner(survey)

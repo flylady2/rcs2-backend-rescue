@@ -6,6 +6,7 @@ class Api::V1::ResponsesController < ApplicationController
       include: [:choices, :rankings]
     }
     render json: { responses: ResponseSerializer.new(@responses, options)}
+    #byebug
   end
 
   def create
@@ -20,7 +21,7 @@ class Api::V1::ResponsesController < ApplicationController
 
       @rankings.each {|ranking|
         ranking.save}
-      @response.response_count  
+      @response.response_count
       #byebug
       options = {
         include: [:rankings]
