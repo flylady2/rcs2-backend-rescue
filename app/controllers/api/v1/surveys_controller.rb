@@ -6,6 +6,7 @@ class Api::V1::SurveysController < ApplicationController
       include: [:choices, :responses]
     }
     render json: { surveys: SurveySerializer.new(@surveys, options)}
+
   end
 
   def create
@@ -28,7 +29,7 @@ class Api::V1::SurveysController < ApplicationController
 
   private
     def survey_params
-      params.require(:survey).permit(:name, :user_id, choices_attributes: [:content, :score, :survey_id])
+      params.require(:survey).permit(:name, :user_id, :threshold,  choices_attributes: [:content, :score, :survey_id])
     end
 
 end
