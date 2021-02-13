@@ -9,12 +9,13 @@ class Response < ApplicationRecord
 
   def response_count
     @survey = self.survey
+
     number_of_responses = @survey.responses.count
-    #byebug
+    if number_of_responses >= @survey.threshold
+      @survey.calculate_winner
+    end
   end
 
-  def calculate_winner(survey)
-    byebug
-  end
+
 
 end

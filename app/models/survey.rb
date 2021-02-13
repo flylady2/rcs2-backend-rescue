@@ -11,11 +11,21 @@ class Survey < ApplicationRecord
 
   #validates :name, uniqueness: { case_sensitive: false}
 
-  def count_responses
-    if self.responses.count == self.threshold
-      calculate_winner(self)
-    end
+  def calculate_winner
+    self.choices.each { |choice|
+      get_rankings(choice)}
   end
+
+  def get_rankings(choice)
+    @rankings = choice.rankings
+    search_by_value(@rankings)
+  end
+
+  def search_by_value(@rankings)
+    number_one_ranking = @rankings.where(value: 1)
+  end
+
+
 
 
 end
