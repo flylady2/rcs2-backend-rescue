@@ -11,7 +11,7 @@ class Response < ApplicationRecord
     @survey = self.survey
 
     number_of_responses = @survey.responses.count
-    if number_of_responses >= @survey.threshold
+    if number_of_responses >= 5#@survey.threshold
       @survey.calculate_winner
     end
   end
