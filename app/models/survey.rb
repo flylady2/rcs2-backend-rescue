@@ -34,7 +34,7 @@ class Survey < ApplicationRecord
       winning_array.push(first_choice_ranking[0])
     end}
     if winning_array.length == 0
-      last_choice_rankings(choice_rankings, survey)
+      least_popular_choice(first_choice_rankings, survey)
     else
       declare_winner(winning_array, survey)
     end
@@ -43,26 +43,41 @@ class Survey < ApplicationRecord
   def declare_winner(winning_array, survey)
     choice_id = winning_array[0]["choice_id"]
     @choice = Choice.find(choice_id)
-    byebug
+    #byebug
   end
 
-  def last_choice_rankings(choice_rankings, survey)
-    byebug
+  def least_popular_choice(first_choice_rankings, survey)
+    first_choice_rankings_lengths = []
+    first_choice_rankings.each { |choice_ranking|
+      first_choice_rankings_lengths.push(choice_ranking.length)}
+    index_of_least_popular_choice = first_choice_rankings_lengths.index(first_choice_rankings_lengths.min)
+    rankings_for_least_popular_choice = first_choice_rankings[first_choice_rankings_lengths.index(first_choice_rankings_lengths.min)]
+    responses_containing_rankings_for_least_popular_choice = []
+    rankings_for_least_popular_choice.each { |ranking|
+      response_id = ranking.response_id
+      response = Response.find(response_id)
+      responses_containing_rankings_for_least_popular_choice.push(response)}
+      create_params(responses_containing_rankings_for_least_popular_choice, rankings_for_least_popular_choice)
+
   end
 
-  #  first_choice_rankings = []
-  #  choice_rankings.each { |choice_ranking|
-  #  first_choice_rankings.push(ranking_array.where(value: 1)}
-  #  winning_array = []
-  #  first_choice_rankings.each { |first_choice|
-  #    if first_choice.length > 0.5 * self.threshold
-  #      winning_array.push(first_choice)
-  #    end
-  #  }
-  #    winning_array
-  #
+  def create_params(response_array, ranking_array)
+    #byebug
+    ranking_array.each { |ranking|
+      response_id = ranking.response_id
+      response = Response.find(response_id)
+      ranking_id = ranking.id
+      params = { rankings_attributes: [{id: "#{ranking_id}", value: "0"}]}
+      response.update(params)}
+      #byebug
 
-    #end
+  end
+
+  def response_attributes(response_params)
+    response = Response.find(response_params)
+    self.response = response if response.valid?
+  end
+
 
 
 end

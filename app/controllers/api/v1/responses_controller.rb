@@ -37,6 +37,10 @@ class Api::V1::ResponsesController < ApplicationController
 
   end
 
+  def update
+    byebug
+  end
+
 
 private
 
