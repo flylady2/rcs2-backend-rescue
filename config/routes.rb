@@ -12,6 +12,9 @@ Rails.application.routes.draw do
       resources :responses, only: [:index, :new, :create, :destroy] do
         resources :rankings, only: [:new, :create]
       end
+      resources :choices, only: [:destroy] do
+        resources :rankings, only: [:destroy]
+      end
       resources :rankings, only: [:update]
     end
   end

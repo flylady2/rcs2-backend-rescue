@@ -11,10 +11,16 @@ class Response < ApplicationRecord
     @survey = self.survey
 
     number_of_responses = @survey.responses.count
-    if number_of_responses >= 5#@survey.threshold
+    if number_of_responses >= @survey.threshold
       @survey.calculate_winner
     end
   end
+
+
+  def ranking_attributes(ranking_params)
+      ranking = Ranking.find(ranking_params)
+
+    end
 
 
 

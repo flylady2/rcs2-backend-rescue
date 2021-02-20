@@ -38,7 +38,7 @@ class Api::V1::ResponsesController < ApplicationController
   end
 
   def update
-    byebug
+    #byebug
   end
 
 
