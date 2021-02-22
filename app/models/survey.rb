@@ -33,21 +33,25 @@ class Survey < ApplicationRecord
       winning_array.push(first_choice_ranking[0])
     end}
     if winning_array.length == 0
-      remove_least_popular_choice(first_choice_rankings, survey)
+      remove_least_popular_choice(first_choice_rankings, choice_rankings, survey)
     else
       declare_winner(winning_array, survey)
     end
   end
 
-  def remove_least_popular_choice(first_choice_rankings, survey)
+  def remove_least_popular_choice(first_choice_rankings, choice_rankings, survey)
     first_choice_rankings_lengths = []
     first_choice_rankings.each { |choice_ranking|
       first_choice_rankings_lengths.push(choice_ranking.length)}
     #byebug
     index_of_least_popular_choice = first_choice_rankings_lengths.index(first_choice_rankings_lengths.min)
-    #byebug
-    rankings_for_least_popular_choice = first_choice_rankings[index_of_least_popular_choice]
-    #byebug
+
+    if first_choice_rankings[index_of_least_popular_choice] == []
+      identify_and_destroy_choice_with_no_first_choices(first_choice_rankings, survey)
+    else
+      rankings_for_least_popular_choice = first_choice_rankings[index_of_least_popular_choice]
+    end
+    byebug
     #identify responses to be updated
     ids_of_responses_to_be_updated = []
     rankings_for_least_popular_choice.each { |ranking|
@@ -68,9 +72,31 @@ class Survey < ApplicationRecord
     create_params(responses_to_be_updated)
   end
 
+  #need to compare survey.choices with first_choice_rankings
+  #process of elimination
+  def identify_and_destroy_choice_with_no_first_choices(first_choice_rankings, survey)
+    #byebug
+    first_choice_ids = []
+    choice_ids = []
+    first_choice_rankings.each { |ranking|
+      if ranking[0]
+        first_choice_ids.push(ranking[0]["choice_id"])
+      end}
+
+    survey.choices.each { |choice|
+        choice_ids.push(choice.id)}
+    #byebug
+    least_popular_choice_id = choice_ids - first_choice_ids
+    #choice = Choice.find(least_popular_choice_id[0])
+    least_popular_choice_id.each { |id|
+      choice = Choice.find(id)
+      choice.destroy}
+    byebug
+  end
+
   #create params for updating responses rankings
   def create_params(responses_to_be_updated)
-    
+
       rankings_to_be_updated = []
       responses_to_be_updated.each { |response|
         response.rankings.each { |ranking|
