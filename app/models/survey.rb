@@ -44,32 +44,33 @@ class Survey < ApplicationRecord
     first_choice_rankings.each { |choice_ranking|
       first_choice_rankings_lengths.push(choice_ranking.length)}
     #byebug
-    index_of_least_popular_choice = first_choice_rankings_lengths.index(first_choice_rankings_lengths.min)
+    #code to deal with more than one having minimum value
+    minimum_value = first_choice_rankings_lengths.min
 
-    if first_choice_rankings[index_of_least_popular_choice] == []
-      identify_and_destroy_choice_with_no_first_choices(first_choice_rankings, survey)
-    else
-      rankings_for_least_popular_choice = first_choice_rankings[index_of_least_popular_choice]
-    end
-    byebug
+    first_choice_rankings.each { |ranking|
+      if ranking.length == 0
+        identify_and_destroy_choice_with_no_first_choices(first_choice_rankings, survey)
+      elsif
+        ranking.length == minimum_value
+        identify_and_destroy_choice_with_minimum_value_first_choices(ranking, survey)
+
+    #  if ranking.length == minimum_value
+    #    identify_and_destroy_choice_with_minimum_value_first_choices(first_choice_rankings, survey)
+      end
+      }
+
+
+    #previous code
+  #  index_of_least_popular_choice = first_choice_rankings_lengths.index(first_choice_rankings_lengths.min)
+
+  #  if first_choice_rankings[index_of_least_popular_choice] == []
+  #    identify_and_destroy_choice_with_no_first_choices(first_choice_rankings, survey)
+  #  else
+  #    rankings_for_least_popular_choice = first_choice_rankings[index_of_least_popular_choice]
+  #  end
+
     #identify responses to be updated
-    ids_of_responses_to_be_updated = []
-    rankings_for_least_popular_choice.each { |ranking|
-      response_id = ranking.response_id
-      ids_of_responses_to_be_updated.push(response_id)}
 
-    #identify and delete choice and associated rankings
-    #byebug
-    choice_id = rankings_for_least_popular_choice[0]["choice_id"]
-    @choice = Choice.find(choice_id)
-    @choice.destroy
-
-    #collect responses (minus deleted rankings) to be updated
-    responses_to_be_updated = []
-    ids_of_responses_to_be_updated.each { |id|
-      response = Response.find(id)
-      responses_to_be_updated.push(response)}
-    create_params(responses_to_be_updated)
   end
 
   #need to compare survey.choices with first_choice_rankings
@@ -91,12 +92,41 @@ class Survey < ApplicationRecord
     least_popular_choice_id.each { |id|
       choice = Choice.find(id)
       choice.destroy}
-    byebug
+
+  end
+
+  def identify_and_destroy_choice_with_minimum_value_first_choices(ranking, survey)
+    #byebug
+    #ids_of_responses_to_be_updated = []
+    #rankings_for_least_popular_choice.each { |ranking|
+    #  response_id = ranking.response_id
+    #  ids_of_responses_to_be_updated.push(response_id)}
+
+    #identify and delete choice and associated rankings
+    #byebug
+    ids_of_responses_to_be_updated = []
+    ranking.each {|ranking|
+      ids_of_responses_to_be_updated.push(ranking.response_id)}
+    choice_id = ranking[0].choice_id
+    @choice = Choice.find(choice_id)
+
+    @choice.destroy
+    create_params(ids_of_responses_to_be_updated)
+
+    #previous code
+  #  ids_of_responses_to_be_updated.each { |id|
+  #    response = Response.find(id)
+  #    responses_to_be_updated.push(response)}
+  #  create_params(responses_to_be_updated)
   end
 
   #create params for updating responses rankings
-  def create_params(responses_to_be_updated)
-
+  def create_params(ids_of_responses_to_be_updated)
+      #byebug
+      responses_to_be_updated = []
+      ids_of_responses_to_be_updated.each {|id|
+        responses_to_be_updated.push(Response.find(id))}
+      #byebug
       rankings_to_be_updated = []
       responses_to_be_updated.each { |response|
         response.rankings.each { |ranking|
@@ -122,6 +152,8 @@ class Survey < ApplicationRecord
       response = Response.find(response_params)
       self.response = response if response.valid?
     end
+
+
 
 
 
