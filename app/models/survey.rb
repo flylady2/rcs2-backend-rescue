@@ -134,7 +134,11 @@ class Survey < ApplicationRecord
     #choice = Choice.find(least_popular_choice_id[0])
     least_popular_choice_id.each { |id|
       choice = Choice.find(id)
-      choice.destroy}
+      survey_id = choice.survey_id
+      choice.destroy
+      @survey = Survey.find(survey_id)
+      @survey.calculate_winner}
+
 
   end
 
