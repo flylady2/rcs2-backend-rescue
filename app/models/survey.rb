@@ -13,10 +13,14 @@ class Survey < ApplicationRecord
 
   def calculate_winner
     survey = self
-    choice_rankings = []
-    self.choices.each { |choice|
-      choice_rankings.push(choice.rankings)}
-    extracting_firsts(choice_rankings, survey)
+    if survey.choices.length > 1
+      choice_rankings = []
+      self.choices.each { |choice|
+        choice_rankings.push(choice.rankings)}
+      extracting_firsts(choice_rankings, survey)
+    else
+      last_man_standing(survey)
+    end
   end
 
   def extracting_firsts(choice_rankings, survey)
@@ -193,6 +197,12 @@ class Survey < ApplicationRecord
 
   def declare_winner(winning_array, survey)
     choice_id = winning_array[0]["choice_id"]
+    @choice = Choice.find(choice_id)
+    byebug
+  end
+
+  def last_man_standing(survey)
+    choice_id = survey.choices[0]["id"]
     @choice = Choice.find(choice_id)
     byebug
   end
