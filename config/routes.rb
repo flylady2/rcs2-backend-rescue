@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users, only: [:index, :new, :create, :show]
+      post '/login', to: 'auth#create'
+      post '/signup', to: 'users#create'
+      get  '/page', to: 'users#page'
       resources :surveys, only: [:index, :new, :create, :show, :destroy] do
         resources :choices, only: [:new, :create]
         resources :responses, only: [:index, :new, :create, :show, :update] do
