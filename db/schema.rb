@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(version: 2021_02_11_013829) do
 
   create_table "choices", force: :cascade do |t|
     t.string "content"
-    t.float "score"
+    t.boolean "winner"
     t.bigint "survey_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
