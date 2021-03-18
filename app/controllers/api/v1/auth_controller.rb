@@ -1,5 +1,5 @@
 class Api::V1::AuthController < ApplicationController
-  skip_before_action :authorized, only: [:create]
+  #Sskip_before_action :authorized, only: [:create]
   wrap_parameters :user, include: [:email, :password]
 
   def create
@@ -13,6 +13,16 @@ class Api::V1::AuthController < ApplicationController
       render json: { message: 'Invalid username or password'}, status: :unauthorized
     end
   end
+
+  #def auto_login
+  #  if current_user
+  #    render json: {user: UserSerializer.new(@user), jwt: token}, status: :accepted
+  #  else
+  #    render json: { message: 'Not logged in'}, status: :unauthorized
+  #  end
+  #end
+
+
 
   private
 
