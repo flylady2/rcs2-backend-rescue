@@ -1,19 +1,22 @@
 class Api::V1::SurveysController < ApplicationController
 
   def index
-    @surveys = Survey.order(id: :asc)
+    #byebug
+    #byebug
+    #surveys = Survey.all.select { |survey| survey.user_id == current_user.id }
+    @surveys = Survey.all
     options = {
       include: [:choices, :responses]
     }
     render json: { surveys: SurveySerializer.new(@surveys, options)}
-
   end
 
   def create
     @survey = Survey.new(survey_params)
+    #byebug
     if @survey.save
 
-      @choices = @survey.choices.build([{content: params["choiceAContent"], score: params["choiceAInitialScore"]}, {content: params["choiceBContent"], score: params["choiceBInitialScore"]}, {content: params["choiceCContent"], score: params["choiceCInitialScore"]}, {content: params["choiceDContent"], score: params["choiceDInitialScore"]}])
+      @choices = @survey.choices.build([{content: params["choiceAContent"], winner: params["choiceAWinnerValue"]}, {content: params["choiceBContent"], winner: params["choiceBWinnerValue"]}, {content: params["choiceCContent"], winner: params["choiceCWinnerValue"]}, {content: params["choiceDContent"], winner: params["choiceDWinnerValue"]}])
       #byebug
       @choices.each {|choice|
         choice.save}
@@ -29,7 +32,7 @@ class Api::V1::SurveysController < ApplicationController
 
   private
     def survey_params
-      params.require(:survey).permit(:name, :user_id, :threshold,  choices_attributes: [:content, :score, :survey_id])
+      params.require(:survey).permit(:name, :user_id, :threshold,  choices_attributes: [:content, :winner, :survey_id])
     end
 
 end
