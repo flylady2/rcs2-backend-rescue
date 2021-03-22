@@ -2,7 +2,8 @@ class CreateSurveys < ActiveRecord::Migration[6.0]
   def change
     create_table :surveys do |t|
       t.string :name
-      t.belongs_to :user, foreign_key: true
+      t.string :user_email
+      t.integer :threshold
 
       t.timestamps
     end

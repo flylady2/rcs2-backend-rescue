@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_11_013829) do
+ActiveRecord::Schema.define(version: 2021_01_15_220947) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "choices", force: :cascade do |t|
     t.string "content"
-    t.float "score"
+    t.boolean "winner", default: false
     t.bigint "survey_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(version: 2021_02_11_013829) do
   end
 
   create_table "responses", force: :cascade do |t|
-    t.string "respondent"
+    t.string "token"
     t.bigint "survey_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -44,17 +44,8 @@ ActiveRecord::Schema.define(version: 2021_02_11_013829) do
 
   create_table "surveys", force: :cascade do |t|
     t.string "name"
-    t.bigint "user_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.string "user_email"
     t.integer "threshold"
-    t.index ["user_id"], name: "index_surveys_on_user_id"
-  end
-
-  create_table "users", force: :cascade do |t|
-    t.string "username"
-    t.string "password_digest"
-    t.string "email"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -63,5 +54,4 @@ ActiveRecord::Schema.define(version: 2021_02_11_013829) do
   add_foreign_key "rankings", "choices"
   add_foreign_key "rankings", "responses"
   add_foreign_key "responses", "surveys"
-  add_foreign_key "surveys", "users"
 end

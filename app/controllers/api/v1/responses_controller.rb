@@ -12,6 +12,7 @@ class Api::V1::ResponsesController < ApplicationController
   def create
     if params[:survey_id] && @survey = Survey.find_by_id(params[:survey_id].to_i)#nested uner responses
       @response = @survey.responses.new(response_params)
+      
     end
     @response.save
     #byebug
@@ -45,6 +46,6 @@ class Api::V1::ResponsesController < ApplicationController
 private
 
   def response_params
-    params.require(:response).permit(:respondent, :survey_id, rankings_attributes: [:value, :response_id, :choice_id])
+    params.require(:response).permit(:token, :survey_id, rankings_attributes: [:value, :response_id, :choice_id])
   end
 end
