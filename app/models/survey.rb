@@ -1,6 +1,6 @@
 class Survey < ApplicationRecord
 
-  belongs_to :user
+
   has_many :choices, dependent: :destroy
   has_many :responses, dependent: :destroy
   has_many :rankings, through: :responses
@@ -9,7 +9,7 @@ class Survey < ApplicationRecord
 
   accepts_nested_attributes_for :choices
 
-  #validates :name, uniqueness: { case_sensitive: false}
+
 
   def calculate_winner
     survey = self
@@ -198,13 +198,16 @@ class Survey < ApplicationRecord
   def declare_winner(winning_array, survey)
     choice_id = winning_array[0]["choice_id"]
     @choice = Choice.find(choice_id)
-    byebug
+    params = { winner: true}
+    @choice.update(params)
   end
 
   def last_man_standing(survey)
     choice_id = survey.choices[0]["id"]
     @choice = Choice.find(choice_id)
     byebug
+    params = { winner: true}
+    @choice.update(params)
   end
 
 

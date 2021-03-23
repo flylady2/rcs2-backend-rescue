@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :users, only: [:index, :new, :create, :show]
+
       resources :surveys, only: [:index, :new, :create, :show, :destroy] do
         resources :choices, only: [:new, :create]
         resources :responses, only: [:index, :new, :create, :show, :update] do
@@ -12,7 +12,7 @@ Rails.application.routes.draw do
       resources :responses, only: [:index, :new, :create, :destroy] do
         resources :rankings, only: [:new, :create]
       end
-      resources :choices, only: [:destroy] do
+      resources :choices, only: [:update, :destroy] do
         resources :rankings, only: [:destroy]
       end
       resources :rankings, only: [:update]
